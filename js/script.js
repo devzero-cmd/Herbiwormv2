@@ -188,8 +188,8 @@ joystickContainer.addEventListener('touchend', (e) => {
   joystickActive = false;
 
   // Reset thumb to center of container (50%/50%)
-  joystickThumb.style.left = '50%';
-  joystickThumb.style.top = '50%';
+  joystickThumb.style.left = '100%';
+  joystickThumb.style.top = '100%';
 });
 
 // Show joystick only on mobile devices (touch support)
