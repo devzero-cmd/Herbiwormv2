@@ -153,28 +153,108 @@ joystickContainer.addEventListener('touchmove', (e) => {
   }
 });
 
-joystickContainer.addEventListener('touchend', (e) => {
+// Existing touch events
+joystickContainer.addEventListener('touchstart', startJoystick);
+joystickContainer.addEventListener('touchmove', moveJoystick);
+joystickContainer.addEventListener('touchend', endJoystick);
+
+// Add mouse events for desktop control
+joystickContainer.addEventListener('mousedown', (e) => {
+  e.preventDefault();
+  joystickActive = true;
+  startX = e.clientX;
+  startY = e.clientY;
+  joystickThumb.style.left = startX + 'px';
+  joystickThumb.style.top = startY + 'px';
+});
+
+window.addEventListener('mousemove', (e) => {
+  if (!joystickActive) return;
+  e.preventDefault();
+
+  let dx = e.clientX - startX;
+  let dy = e.clientY - startY;
+
+  const maxDist = 40;
+  const dist = Math.min(Math.sqrt(dx*dx + dy*dy), maxDist);
+  const angle = Math.atan2(dy, dx);
+
+  dx = dist * Math.cos(angle);
+  dy = dist * Math.sin(angle);
+
+  joystickThumb.style.left = startX + dx + 'px';
+  joystickThumb.style.top = startY + dy + 'px';
+
+  const normX = dx / maxDist;
+  const normY = dy / maxDist;
+
+  if (game && game.snakes && game.snakes[0]) {
+    game.snakes[0].velocity.x = normX * game.snakes[0].speed;
+    game.snakes[0].velocity.y = normY * game.snakes[0].speed;
+  }
+});
+
+window.addEventListener('mouseup', (e) => {
+  if (!joystickActive) return;
   e.preventDefault();
   joystickActive = false;
-  // Reset thumb position
+
   joystickThumb.style.left = '50%';
   joystickThumb.style.top = '50%';
 
   if (game && game.snakes && game.snakes[0]) {
-    // Stop movement when joystick released
     game.snakes[0].velocity.x = 0;
     game.snakes[0].velocity.y = 0;
   }
 });
 
-// Show joystick only on mobile devices (touch support)
-function isMobile() {
-  return ('ontouchstart' in window) || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
+// Extracted touch event handlers to reuse code
+function startJoystick(e) {
+  e.preventDefault();
+  joystickActive = true;
+  const touch = e.targetTouches[0];
+  startX = touch.clientX;
+  startY = touch.clientY;
+  joystickThumb.style.left = startX + 'px';
+  joystickThumb.style.top = startY + 'px';
 }
 
-if (isMobile()) {
-  joystickContainer.style.display = 'block';  // show joystick on mobile
-} else {
-  joystickContainer.style.display = 'none';   // hide on desktop
+function moveJoystick(e) {
+  if (!joystickActive) return;
+  e.preventDefault();
+
+  const touch = e.targetTouches[0];
+  let dx = touch.clientX - startX;
+  let dy = touch.clientY - startY;
+
+  const maxDist = 40;
+  const dist = Math.min(Math.sqrt(dx*dx + dy*dy), maxDist);
+  const angle = Math.atan2(dy, dx);
+
+  dx = dist * Math.cos(angle);
+  dy = dist * Math.sin(angle);
+
+  joystickThumb.style.left = startX + dx + 'px';
+  joystickThumb.style.top = startY + dy + 'px';
+
+  const normX = dx / maxDist;
+  const normY = dy / maxDist;
+
+  if (game && game.snakes && game.snakes[0]) {
+    game.snakes[0].velocity.x = normX * game.snakes[0].speed;
+    game.snakes[0].velocity.y = normY * game.snakes[0].speed;
+  }
+}
+
+function endJoystick(e) {
+  e.preventDefault();
+  joystickActive = false;
+  joystickThumb.style.left = '50%';
+  joystickThumb.style.top = '50%';
+
+  if (game && game.snakes && game.snakes[0]) {
+    game.snakes[0].velocity.x = 0;
+    game.snakes[0].velocity.y = 0;
+  }
 }
 
