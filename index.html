@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>HERBIWORM</title>
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: #0d0d0d;
+      font-family: 'Orbitron', sans-serif;
+    }
+
+  #startScreen {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  /* Lighter, professional gradient */
+  background: radial-gradient(circle at center, #f8f0f84f 0%, #364b46 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+
+    #startScreen h1 {
+      font-size: 64px;
+      color: #00ffee;
+      text-shadow: 0 0 10px #00ffee, 0 0 40px #0077ff;
+      margin-bottom: 30px;
+    }
+
+    #startBtn {
+      font-size: 28px;
+      padding: 20px 60px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(45deg, #00ffee, #0077ff);
+      color: white;
+      box-shadow: 0 0 25px #00ffee, 0 0 60px #0077ff;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    #startBtn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 40px #00ffee, 0 0 80px #0077ff;
+    }
+
+    #gameLogo {
+      width: 150px;
+      margin-bottom: 20px;
+      filter: drop-shadow(0 0 10px #00ffee);
+    }
+
+    #game {
+      display: none;
+    }
+
+    #restartBtn {
+      position: fixed;
+      left: 50%;
+      bottom: 5%;
+      transform: translateX(-50%);
+      font-size: 20px;
+      padding: 10px 25px;
+      background-color: #333;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      box-shadow: 0 0 10px #00ffee;
+      z-index: 1000;
+    }
+  </style>
+</head>
+<body>
+
+<!-- START SCREEN -->
+<div id="startScreen">
+  <img src="https://i.postimg.cc/4dMvdxbK/unnamed.png" id="gameLogo" />
+  
+  <h1>HERBiWORM</h1>
+  <button id="startBtn">Start Game</button>
+</div>
+
+<!-- GAME CANVAS -->
+<div id="game">    
+  <canvas class="cnv" id="canvasSnake" height="400" width="800"></canvas>
+  <canvas class="cnv" id="canvasFood" height="400" width="800"></canvas>    
+  <canvas class="cnv" id="canvasHex" height="400" width="800"></canvas>
+  <button id="restartBtn">Restart</button>
+</div>
+
+<!-- Virtual Joystick -->
+<div id="joystick-container">
+  <div id="joystick-thumb"></div>
+</div>
+
+
+<script type="text/javascript" src="js/util.js"></script>
+<script type="text/javascript" src="js/point.js"></script>
+<script type="text/javascript" src="js/hexagon.js"></script>
+<script type="text/javascript" src="js/snake.js"></script>
+<script type="text/javascript" src="js/snakeai.js"></script>
+<script type="text/javascript" src="js/Food.js"></script>
+<script type="text/javascript" src="js/Game.js"></script>
+<script type="text/javascript" src="js/script.js"></script>
+
+<!-- Start logic -->
+<script>
+  document.getElementById("startBtn").addEventListener("click", function () {
+    document.getElementById("startScreen").style.display = "none";
+    document.getElementById("game").style.display = "block";
+
+    if (typeof game !== 'undefined' && typeof game.start === 'function') {
+      game.start(); // or pass a default name
+    }
+  });
+</script>
+
+</body>
+</html>
