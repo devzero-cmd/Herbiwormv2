@@ -166,3 +166,15 @@ joystickContainer.addEventListener('touchend', (e) => {
     game.snakes[0].velocity.y = 0;
   }
 });
+
+// Show joystick only on mobile devices (touch support)
+function isMobile() {
+  return ('ontouchstart' in window) || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
+}
+
+if (isMobile()) {
+  joystickContainer.style.display = 'block';  // show joystick on mobile
+} else {
+  joystickContainer.style.display = 'none';   // hide on desktop
+}
+
